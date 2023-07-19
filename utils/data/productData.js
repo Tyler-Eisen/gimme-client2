@@ -1,7 +1,7 @@
 import { clientCredentials } from '../client';
 
 const getProducts = (uid) => new Promise((resolve, reject) => {
-  fetch(`${clientCredentials.databaseURL}/products`, {
+  fetch(`${clientCredentials.databaseURL}/products?seller=${uid}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

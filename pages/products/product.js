@@ -2,16 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import ProductCard from '../../components/ProductCard';
-// import { useAuth } from '../../utils/context/authContext';
+import { useAuth } from '../../utils/context/authContext';
 import { getProducts } from '../../utils/data/productData';
 
 function Home() {
   const [products, setProducts] = useState([]);
   const router = useRouter();
-  // const { user } = useAuth();
+  const { user } = useAuth();
+  console.warn(user);
 
   const showProducts = () => {
-    getProducts().then((data) => setProducts(data));
+    getProducts(user.uid).then((data) => setProducts(data));
   };
 
   useEffect(() => {
