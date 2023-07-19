@@ -12,7 +12,7 @@ const initialState = {
   description: '',
   stock: '',
   image_url: '',
-  categories: [],
+  category: [],
 };
 
 const ProductForm = ({ product }) => {
@@ -37,20 +37,48 @@ const ProductForm = ({ product }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setCurrentProduct((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    if (name === 'category') {
+      // Find the selected category object in the `categories` state
+      const selectedCategory = categories.find((cat) => cat.id === parseInt(value, 10));
+
+      // Assign an array containing the selected category to the `category` field
+      setCurrentProduct((prevState) => ({
+        ...prevState,
+        category: [selectedCategory],
+      }));
+    } else {
+      setCurrentProduct((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const payload = {
+      name: currentProduct.name,
+      price: currentProduct.price,
+      description: currentProduct.description,
+      stock: currentProduct.stock,
+      image_url: currentProduct.image_url,
+      seller: user.id,
+      category: currentProduct.category.map((category) => category.id), // Ensure category ids, not objects, are passed.
+    };
+
     if (product && product.id) {
-      updateProduct(currentProduct.id, { ...currentProduct, seller: user.id })
-        .then(() => router.push('/products/product'));
+      updateProduct(currentProduct.id, payload)
+        .then(() => router.push('/products/product'))
+        .catch((error) => {
+          console.error('Failed to update product:', error);
+        });
     } else {
-      createProduct({ ...currentProduct, seller: user.id })
-        .then(() => router.push('/products/product'));
+      createProduct(payload)
+        .then(() => router.push('/products/product'))
+        .catch((error) => {
+          console.error('Failed to create product:', error);
+        });
     }
   };
 
@@ -114,9 +142,9 @@ const ProductForm = ({ product }) => {
       <Form.Group className="mb-3">
         <Form.Label>Category</Form.Label>
         <Form.Select
-          name="categories"
+          name="category"
           required
-          value={currentProduct.categories}
+          value={currentProduct.category[0]?.id} // Use the id of the first (and only) category in the array
           onChange={handleChange}
         >
           <option value="">Select a Category</option>
