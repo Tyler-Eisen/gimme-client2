@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import ProductCard from '../../components/ProductCard';
-import { getProductsBySeller } from '../../utils/data/productData';
+
 import { useAuth } from '../../utils/context/authContext';
+import { getProductsBySeller } from '../../utils/data/productData';
 
 function SellerProducts() {
   const [products, setProducts] = useState([]);
   const { user } = useAuth();
+  const router = useRouter();
+  const { id } = router.query;
 
   const showProducts = () => {
-    getProductsBySeller(user.id).then((data) => setProducts(data));
+    console.warn({ id });
+    getProductsBySeller(id).then((data) => setProducts(data));
   };
 
   useEffect(() => {
