@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import ProductCard from '../../components/ProductCard';
-
+import { ShopContextProvider } from '../../context/shop-context';
 import { useAuth } from '../../utils/context/authContext';
 import { getProductsBySeller } from '../../utils/data/productData';
 
@@ -22,30 +22,31 @@ function SellerProducts() {
   }, []);
 
   return (
-    <div>
-      <h1>Products by {user.name}</h1>
-      <div style={{
-        display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center',
-      }}
-      >
-        {products.map((product) => (
-          <div key={`product--${product.id}`} className="product">
-            <ProductCard
-              id={product.id}
-              seller={product.seller}
-              name={product.name}
-              price={product.price}
-              description={product.description}
-              stock={product.stock}
-              imageUrl={product.image_url}
-              category={product.category.name}
-              onUpdate={showProducts}
-            />
-          </div>
-        ))}
+    <ShopContextProvider>
+      <div>
+        <h1>Products by {user.name}</h1>
+        <div style={{
+          display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center',
+        }}
+        >
+          {products.map((product) => (
+            <div key={`product--${product.id}`} className="product">
+              <ProductCard
+                id={product.id}
+                seller={product.seller}
+                name={product.name}
+                price={product.price}
+                description={product.description}
+                stock={product.stock}
+                imageUrl={product.image_url}
+                category={product.category.name}
+                onUpdate={showProducts}
+              />
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </ShopContextProvider>
   );
 }
-
 export default SellerProducts;
