@@ -29,6 +29,9 @@ export default function NavBar() {
             <Link passHref href="/orders/sellers">
               <Nav.Link>What You&#39;re Gettin</Nav.Link>
             </Link>
+            <Link passHref href="/cart">
+              <Nav.Link>Cart</Nav.Link>
+            </Link>
             <Link passHref href="/delete-me">
               <Nav.Link>Delete Me</Nav.Link>
             </Link>

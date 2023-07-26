@@ -1,11 +1,12 @@
 /* eslint-disable react/forbid-prop-types */
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button, Card, Image } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useAuth } from '../utils/context/authContext';
 import { deleteProduct } from '../utils/data/productData';
+import { ShopContext } from '../context/shop-context';
 
 const ProductCard = ({
   id,
@@ -24,10 +25,10 @@ const ProductCard = ({
       deleteProduct(id).then(() => onUpdate());
     }
   };
-
   const router = useRouter();
   const { user } = useAuth();
   const isCurrentUserPost = user && user.id === seller.id;
+  const { addToCart } = useContext(ShopContext);
 
   const cardStyles = {
     display: 'flex',
@@ -76,7 +77,21 @@ const ProductCard = ({
             Delete
           </Button>
         </>
-      ) : null}
+      ) : (
+        <Button
+          className="add-btn"
+          onClick={() => addToCart(id,
+            seller,
+            category,
+            name,
+            price,
+            description,
+            stock,
+            imageUrl)}
+        >
+          Add to Cart
+        </Button>
+      ) }
     </Card>
   );
 };

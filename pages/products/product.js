@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import ProductCard from '../../components/ProductCard';
 import { useAuth } from '../../utils/context/authContext';
 import { getProducts } from '../../utils/data/productData';
+import { ShopContextProvider } from '../../context/shop-context';
 
 function Home() {
   const [products, setProducts] = useState([]);
@@ -21,7 +22,7 @@ function Home() {
   }, []);
 
   return (
-    <>
+    <ShopContextProvider>
       <Button
         className="create-btn"
         onClick={() => {
@@ -51,7 +52,7 @@ function Home() {
           </div>
         ))}
       </div>
-    </>
+    </ShopContextProvider>
   );
 }
 
