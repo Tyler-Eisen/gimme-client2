@@ -12,7 +12,7 @@ function Home() {
   console.warn(user);
 
   const showProducts = () => {
-    getProducts(user.uid).then((data) => setProducts(data));
+    getProducts(user.id).then((data) => setProducts(data));
   };
 
   useEffect(() => {

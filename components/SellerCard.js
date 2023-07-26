@@ -39,7 +39,7 @@ const SellerCard = ({
         <Image src={imageUrl} style={cardImageStyles} />
       </Card.Body>
       {isCurrentUser ? null : (
-        <Link href={`/orders/${id}`} passHref>
+        <Link href={`/sellerProducts/${id}`} passHref>
           <Button>View Products</Button>
         </Link>
       )}
