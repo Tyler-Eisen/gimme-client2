@@ -1,8 +1,5 @@
 import PropTypes from 'prop-types';
 import { createContext, useEffect, useState } from 'react';
-import {
-  updateOrderItem, deleteOrderItem,
-} from '../utils/data/orderItemData';
 // import { useAuth } from '../utils/context/authContext';
 
 export const ShopContext = createContext(null);
@@ -12,39 +9,48 @@ export const ShopContextProvider = ({ children }) => {
   // const { user } = useAuth();
 
   useEffect(() => {
-    setCartItems({});
+    const initialCartItems = JSON.parse(localStorage.getItem('cartItems')) || {};
+    setCartItems(initialCartItems);
   }, []);
 
   const addToCart = (product) => {
-    setCartItems((prevCartItems) => ({
-      ...prevCartItems,
-      [product.id]: (prevCartItems[product.id] || 0) + 1,
-    }));
+    setCartItems((prevCartItems) => {
+      const updatedCartItems = {
+        ...prevCartItems,
+        [product.id]: {
+          ...product,
+          quantity: (prevCartItems[product.id]?.quantity || 0) + 1,
+        },
+      };
+      localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+      return updatedCartItems;
+    });
   };
 
   const removeFromCart = (product) => {
     if (cartItems[product.id]) {
       const updatedOrderItem = {
         ...product,
-        quantity: cartItems[product.id] - 1,
+        quantity: cartItems[product.id].quantity - 1,
       };
-      if (updatedOrderItem.quantity > 0) {
-        updateOrderItem(updatedOrderItem).then(() => {
-          setCartItems({
-            ...cartItems,
-            [product.id]: updatedOrderItem.quantity,
-          });
-        });
-      } else {
-        deleteOrderItem(product).then(() => {
-          const newCartItems = { ...cartItems };
-          delete newCartItems[product.id];
-          setCartItems(newCartItems);
-        });
-      }
+      setCartItems((prevCartItems) => {
+        let updatedCartItems;
+        if (updatedOrderItem.quantity > 0) {
+          updatedCartItems = {
+            ...prevCartItems,
+            [product.id]: updatedOrderItem,
+          };
+        } else {
+          updatedCartItems = { ...prevCartItems };
+          delete updatedCartItems[product.id];
+        }
+        localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+        return updatedCartItems;
+      });
     }
   };
-  console.warn(cartItems);
+
+  console.warn('cartItems', cartItems);
   return (
     <ShopContext.Provider value={{ cartItems, addToCart, removeFromCart }}>
       {children}
