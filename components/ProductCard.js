@@ -80,17 +80,17 @@ const ProductCard = ({
       ) : (
         <Button
           className="add-btn"
-          onClick={() => addToCart(id,
+          onClick={() => addToCart({
+            id,
             seller,
             category,
             name,
             price,
             description,
             stock,
-            imageUrl)}
-        >
-          Add to Cart
-        </Button>
+            imageUrl,
+          })}
+        />
       ) }
     </Card>
   );
@@ -99,7 +99,7 @@ const ProductCard = ({
 ProductCard.propTypes = {
   id: PropTypes.number.isRequired,
   seller: PropTypes.object.isRequired,
-  category: PropTypes.array.isRequired,
+  category: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
